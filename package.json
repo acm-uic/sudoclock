@@ -9,6 +9,7 @@
   "author": "Chase Lee <clee231@uic.edu>",
   "license": "MIT",
   "dependencies": {
-    "svg.js": "^2.6.4"
+    "svg.js": "^2.6.4",
+    "svg.pathmorphing.js": "^0.1.1"
   }
 }

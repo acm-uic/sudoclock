@@ -12,4 +12,5 @@ All this application does is display a pretty clock for the world to see.
 ## Future Features / Wishlist?
 
 * Pull event data from calendars and display them for the day.
-* Allow real-time chat applications to interact with the clock 
+* Allow real-time chat applications to interact with the clock.
+* Different visualizations for the clock.
