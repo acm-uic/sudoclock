@@ -1,0 +1,14 @@
+{
+  "name": "sudoclock",
+  "version": "1.0.0",
+  "description": "A new clock for the ACM. ~A SIG-SUDO sponsored project.~",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Chase Lee <clee231@uic.edu>",
+  "license": "MIT",
+  "dependencies": {
+    "svg.js": "^2.6.4"
+  }
+}
