@@ -27,6 +27,7 @@ function centerCircle(canvas) {
 /**
  * drawNumbers(SVG: canvas)
  * Creates the reference numbers used to the clock.
+ * Transitions to each every second.
  * @param {SVG} canvas 
  */
 function drawNumbers(canvas) {
@@ -52,6 +53,12 @@ function drawNumbers(canvas) {
     setTimeout(changeNum.bind(null,one, zerod), 9000);
 }
 
+/**
+ * changeNum(SVG: item, string: to)
+ * Helper function to perform number transition.
+ * @param {SVG} item 
+ * @param {string} to 
+ */
 function changeNum(item, to) {
     item.animate(250, '<>', 0).plot(to);
 }
