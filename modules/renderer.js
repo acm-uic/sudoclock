@@ -11,8 +11,10 @@
 export function renderer_start(cssSelector) {
     var draw = SVG(cssSelector).size(window.innerWidth, window.innerHeight)
     var rect = draw.rect(100, 100).attr({ fill: '#f06' })
-    centerCircle(draw)
+    //centerCircle(draw)
     drawNumbers_HeeboStroke(draw)
+    var fnt = new Heebo();
+    console.log(fnt.drawNumbers(draw,(window.innerWidth/4),(window.innerHeight/3),'31337'))
 }
 
 /**
@@ -28,6 +30,7 @@ function centerCircle(canvas) {
  * drawNumbers(SVG: canvas)
  * Creates the reference numbers used to the clock.
  * Transitions to each every second.
+ * **DEPRECATED FUNCTION** (Although, useful for testing...)
  * @param {SVG} canvas 
  */
 function drawNumbers(canvas) {
@@ -68,6 +71,7 @@ function changeNum(item, to) {
  * Creates the reference numbers used to the clock.
  * Transitions to each every second.
  * Uses the Heebo Font
+ * **DEPRECATED FUNCTION**
  * @param {SVG} canvas 
  */
 function drawNumbers_Heebo(canvas) {
@@ -94,10 +98,11 @@ function drawNumbers_Heebo(canvas) {
 }
 
 /**
- * drawNumbers_Heebo(SVG: canvas)
+ * drawNumbers_HeeboStroke(SVG: canvas)
  * Creates the reference numbers used to the clock.
  * Transitions to each every second.
  * Uses the Heebo Font
+ * **DEPRECATED FUNCTION**
  * @param {SVG} canvas 
  */
 function drawNumbers_HeeboStroke(canvas) {
@@ -121,4 +126,89 @@ function drawNumbers_HeeboStroke(canvas) {
     setTimeout(changeNum.bind(null,one, eightd), 7000);
     setTimeout(changeNum.bind(null,one, nined), 8000);
     setTimeout(changeNum.bind(null,one, zerod), 9000);
+}
+
+/**
+ * Font Class
+ * Base font class used to provide basic scaffolding for other fonts.
+ */
+class Font {
+    /**
+     * Font Class constructor
+     * Initializes instance with the base font paths.
+     */
+    constructor() {
+        this.oned = 'M170,137 242,24 242,560'
+        this.twod = 'M68,98c0,0,71-74,183-74s195,49,192,136C370,245,68,560,68,560h376'
+        this.threed = 'M69,513.4c0,0,60,74,187.6,74.3S445,526,445.6,448.1C446.2,370.3,269,306,257.7,305.7 c13.3,0.3,187.5-64.6,186.9-142.4C444,85.4,383.1,23.4,255.6,23.7C128,24,68,98,68,98'
+        this.fourd = 'M331,588 331,24 83,306 420,306'
+        this.fived = 'M445,24H72c0,0,13,94,13,144s-3,129-3,129s364-59,364,151c-1,114-104,140-195,140c-114,0-183-75-183-75'
+        this.sixd = 'M88,403c0-139,104-166,167-166c103.3,0,167,62.7,167,166s-63.7,185-167,185S88,506.3,88,403 c0,0-10-380,167-380'
+        this.sevend = 'M88,68L67,23c0,0,322,0,378,0c-58,54.1-125.5,174.7-159.7,310.8C251,470,247,588,247,588'
+        this.eightd = 'M254,234c129,0,178,86,178,151c0,96.6-78.4,175-175,175S82,481.6,82,385C82,319.8,134,234,254,234 c77,3,126-41,126-87.5C380,78.8,325.2,24,257.5,24S135,78.8,135,146.5C135,197,170,234,254,234z'
+        this.nined = 'M421.9,208c0,139-104,166-167,166c-103.3,0-167-62.7-167-166s63.7-185,167-185S421.9,104.7,421.9,208 c0,0,10,380-167,380'
+        this.zerod = 'M281.5,560h-48C177.1,560,131,513.9,131,457.5v-332C131,69.1,177.1,23,233.5,23h48 C337.9,23,384,69.1,384,125.5v332C384,513.9,337.9,560,281.5,560z'
+        this.numberArr = [this.zerod, this.oned, this.twod, this.threed, this.fourd, this.fived, this.sixd, this.sevend, this.eightd, this.nined]
+        this.kerningArr = [200, 100, 50, 50, 50, 75, 50, 80, 50, 50]
+    }
+
+    /**
+     * getNumber(Number: num)
+     * Returns the path data for a given number.
+     * num must be between 0 - 9, inclusive.
+     * @param {number} num 
+     */
+    getNumber(num) {
+        if (num > 9 || num < 0) {
+            return '';
+        }
+        return this.numberArr[num];
+    }
+
+    /**
+     * drawNumbers(SVG: canvas, Number: sx, Number: sy, String: toDraw)
+     * Draws the numbers spaced out by kerning. 
+     * sx & sy specify the starting point the numbers should be drawn at.
+     * toDraw is a string representing the numbers to draw.
+     * @param {SVG} canvas 
+     * @param {Number} sx
+     * @param {Number} sy
+     * @param {String} toDraw
+     */
+    drawNumbers(canvas, sx, sy, toDraw) {
+        var elems = [];
+        var x = sx;
+        var y = sy;
+        for(var i = 0; i < toDraw.length; i++) {
+            elems.push(canvas.path(this.numberArr[parseInt(toDraw.charAt(i))]).fill({opacity: 0}).stroke({ color: '#fff', width: 4, linecap: 'round', linejoin: 'round' }).move(x,y))
+            x = x + this.kerningArr[parseInt(toDraw.charAt(i))]
+        }
+        return elems
+        
+    }
+}
+
+/**
+ * Font class defining the Heebo font.
+ */
+class Heebo extends Font {
+    /**
+     * Heebo Font Constructor
+     */
+    constructor() {
+        super()
+        this.oned = 'M55,79 133,50 132,299'
+        this.twod = 'M203.5,295.5h-152c0,0,131.8-125,133.7-186.2c1.2-35-20.5-62.8-67.7-62.8 C78.6,46.5,50,78.9,50,117'
+        this.threed = 'M44.3,224.6c0,51.9,50.5,70.1,77,69.9c25.9-0.3,72-11.3,72-67S132.5,167,95.1,167 c37.4,0,91.4-12,93.1-59.1c0.8-21.3-8.5-66.2-69-66.2c-64.7,0-69,66.2-69,66.2'
+        this.fourd = 'M159.3,299.3 159.3,45.3 37,224.8 207.8,225.3'
+        this.fived = 'M190.6,47.8H71.3L59.8,161.3c14.5-12.4,40.7-19.1,60-19.5c51.8,2.3,69.5,38.8,68.5,84.3 c0,38.3-23.5,70.8-68.5,70.8c-48.5,0-68.2-38.8-67.7-66.3'
+        this.sixd = 'M166.7,42.3c-26.9,0-71.4,10-92.9,40c-28,39.1-27.5,73.5-26.8,97.5S43.3,251,74.8,276 c31.8,25.3,59,19.8,77.3,11.5s39.8-33.5,40.5-76.8s-28-70.5-50.8-76.3c-19-4.8-47.5-1.5-67.5,13.8c-17.1,13-27.2,35-27.2,35'
+        this.sevend = 'M43.1,50 200.3,50 89,299.3'
+        this.eightd = 'M120.6,44.3c42.8,0,68.4,27.3,68.4,61.6c0,33.5-25.3,62.1-68.3,62.1s-76.3,21.3-76.3,69.7 c0,36.7,40.3,58.3,76.3,58.3c29.7,0,76-11.9,76-64.3s-56.3-64.7-76-64.7S51,152.8,51,105.9S89.9,44.3,120.6,44.3z'
+        this.nined = 'M73.4,295.8c26.9,0,71.4-10,92.9-40c28-39.1,27.5-73.5,26.8-97.5s3.7-71.2-27.8-96.3 c-31.8-25.3-59-19.8-77.3-11.5S48.3,84,47.6,127.3s28,70.5,50.7,76.3c19,4.8,47.5,1.5,67.5-13.8c17.1-13,27.2-35,27.2-35'
+        this.zerod = 'M119.2,44.5c48.3,0,61.9,41.8,66.6,55.5c8,21.5,6.9,104.3,1,133.5C181,262,164.4,297,119.2,297 s-67-45.4-69.2-74.5c-2.3-31-4.4-101.2,3.7-123C62.2,76.4,75.9,45.5,119.2,44.5z'
+        this.numberArr = [this.zerod, this.oned, this.twod, this.threed, this.fourd, this.fived, this.sixd, this.sevend, this.eightd, this.nined]
+        this.kerningArr = [170, 100, 160, 165, 190, 155, 150, 160, 160, 165]
+    }
+
 }
