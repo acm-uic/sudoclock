@@ -14,7 +14,7 @@ export function renderer_start(cssSelector) {
     //centerCircle(draw)
     drawNumbers_HeeboStroke(draw)
     var fnt = new Heebo();
-    console.log(fnt.drawNumbers(draw,(window.innerWidth/4),(window.innerHeight/3),'31337'))
+    console.log(fnt.drawNumbers(draw,(window.innerWidth/4),(window.innerHeight/3),'23:59:59'))
 }
 
 /**
@@ -180,8 +180,13 @@ class Font {
         var x = sx;
         var y = sy;
         for(var i = 0; i < toDraw.length; i++) {
+            if (toDraw.charAt(i) === ':') {
+                elems.push(canvas.path(this.numberArr[10]).fill({color: '#fff'}).move(x,y+30))
+                x = x + this.kerningArr[10]
+            } else {
             elems.push(canvas.path(this.numberArr[parseInt(toDraw.charAt(i))]).fill({opacity: 0}).stroke({ color: '#fff', width: 4, linecap: 'round', linejoin: 'round' }).move(x,y))
             x = x + this.kerningArr[parseInt(toDraw.charAt(i))]
+            }
         }
         return elems
         
@@ -207,8 +212,9 @@ class Heebo extends Font {
         this.eightd = 'M120.6,44.3c42.8,0,68.4,27.3,68.4,61.6c0,33.5-25.3,62.1-68.3,62.1s-76.3,21.3-76.3,69.7 c0,36.7,40.3,58.3,76.3,58.3c29.7,0,76-11.9,76-64.3s-56.3-64.7-76-64.7S51,152.8,51,105.9S89.9,44.3,120.6,44.3z'
         this.nined = 'M73.4,295.8c26.9,0,71.4-10,92.9-40c28-39.1,27.5-73.5,26.8-97.5s3.7-71.2-27.8-96.3 c-31.8-25.3-59-19.8-77.3-11.5S48.3,84,47.6,127.3s28,70.5,50.7,76.3c19,4.8,47.5,1.5,67.5-13.8c17.1-13,27.2-35,27.2-35'
         this.zerod = 'M119.2,44.5c48.3,0,61.9,41.8,66.6,55.5c8,21.5,6.9,104.3,1,133.5C181,262,164.4,297,119.2,297 s-67-45.4-69.2-74.5c-2.3-31-4.4-101.2,3.7-123C62.2,76.4,75.9,45.5,119.2,44.5z'
-        this.numberArr = [this.zerod, this.oned, this.twod, this.threed, this.fourd, this.fived, this.sixd, this.sevend, this.eightd, this.nined]
-        this.kerningArr = [170, 100, 160, 165, 190, 155, 150, 160, 160, 165]
+        this.colond = 'M62.5,247.9c1.9,1.9,2.9,4.2,2.9,6.9c0,2.7-1,4.9-2.9,6.8c-1.9,1.9-4.2,2.8-6.9,2.8c-2.7,0-4.9-0.9-6.8-2.8 c-1.9-1.9-2.8-4.1-2.8-6.8c0-2.7,0.9-5,2.8-6.9c1.9-1.9,4.1-2.9,6.8-2.9C58.3,245,60.6,245.9,62.5,247.9z M63.3,80 c1.9,1.9,2.9,4.2,2.9,6.9c0,2.7-1,4.9-2.9,6.8c-1.9,1.9-4.2,2.8-6.9,2.8c-2.7,0-4.9-0.9-6.8-2.8c-1.9-1.9-2.8-4.1-2.8-6.8 c0-2.7,0.9-5,2.8-6.9c1.9-1.9,4.1-2.9,6.8-2.9C59.1,77.1,61.4,78.1,63.3,80z'
+        this.numberArr = [this.zerod, this.oned, this.twod, this.threed, this.fourd, this.fived, this.sixd, this.sevend, this.eightd, this.nined, this.colond]
+        this.kerningArr = [170, 100, 160, 165, 190, 155, 150, 160, 160, 165, 50]
     }
 
 }
