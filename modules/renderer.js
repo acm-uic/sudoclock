@@ -59,6 +59,8 @@ function drawNumbers(canvas) {
 /**
  * changeNum(SVG: item, string: to)
  * Helper function to perform number transition.
+ * item is the reference to the SVG.
+ * to is the SVG path data represented as a string.
  * @param {SVG} item 
  * @param {string} to 
  */
@@ -189,7 +191,34 @@ class Font {
             }
         }
         return elems
-        
+    }
+
+    /**
+     * transitionNumbers(SVG: canvas, Number: sx, Number: sy, Array[SVG.Element]: curDisplay, String: toDraw)
+     * Transitions from the previous set of displayed glyphs to the next set, while applying appropriate animations.
+     * sx & sy specify the starting point the numbers should be drawn at.
+     * curDisplay is the current array of SVG.Elements, each representing a separate glyph in the display.
+     * toDraw is the new text that the function should transition to.
+     * @param {SVG} canvas
+     * @param {Number} sx
+     * @param {Number} sy
+     * @param {Array[SVG.Element]} curDisplay
+     * @param {String} toDraw
+     */
+    transitionNumbers(canvas, sx, sy, curDisplay, toDraw) {
+        var elems = []
+        var x = sx
+        var y = sy
+        for (var i = 0; i < toDraw.length; i++) {
+            if (toDraw.charAt(i) === ':') {
+                elems.push(canvas.path(this.numberArr[10]).fill({color: '#fff'}).move(x,y+30))
+                x = x + this.kerningArr[10]
+            } else {
+            elems.push(canvas.path(this.numberArr[parseInt(toDraw.charAt(i))]).fill({opacity: 0}).stroke({ color: '#fff', width: 4, linecap: 'round', linejoin: 'round' }).move(x,y))
+            x = x + this.kerningArr[parseInt(toDraw.charAt(i))]
+            }
+        }
+        return elems
     }
 }
 
