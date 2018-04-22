@@ -10,11 +10,18 @@
  */
 export function renderer_start(cssSelector) {
     var draw = SVG(cssSelector).size(window.innerWidth, window.innerHeight)
-    var rect = draw.rect(100, 100).attr({ fill: '#f06' })
+    //var rect = draw.rect(100, 100).attr({ fill: '#f06' })
     //centerCircle(draw)
-    drawNumbers_HeeboStroke(draw)
+    //drawNumbers_HeeboStroke(draw)
     var fnt = new Heebo();
-    console.log(fnt.drawNumbers(draw,(window.innerWidth/4),(window.innerHeight/3),'23:59:59'))
+    var disp = fnt.drawNumbers(draw,(window.innerWidth/4),(window.innerHeight/3),'23:59:59')
+	console.log(disp)
+    //fnt.transitionNumbers(draw, (window.innerWidth/4), (window.innerHeight/3), disp, curTimeString())
+	setInterval(function() { updateClock(fnt, draw, disp)}, 1000)
+}
+
+function updateClock(font, draw, disp) {
+	font.transitionNumbers(draw, (window.innerWidth/4), (window.innerHeight/3), disp, curTimeString())
 }
 
 /**
@@ -54,7 +61,7 @@ function drawNumbers(canvas) {
     setTimeout(changeNum.bind(null,one, eightd), 7000);
     setTimeout(changeNum.bind(null,one, nined), 8000);
     setTimeout(changeNum.bind(null,one, zerod), 9000);
-}
+1}
 
 /**
  * changeNum(SVG: item, string: to)
@@ -65,7 +72,7 @@ function drawNumbers(canvas) {
  * @param {string} to 
  */
 function changeNum(item, to) {
-    item.animate(250, '<>', 0).plot(to);
+    return item.animate(250, '<>', 0).plot(to);
 }
 
 /**
@@ -211,10 +218,10 @@ class Font {
         var y = sy
         for (var i = 0; i < toDraw.length; i++) {
             if (toDraw.charAt(i) === ':') {
-                elems.push(canvas.path(this.numberArr[10]).fill({color: '#fff'}).move(x,y+30))
+                elems.push(changeNum(curDisplay[i], this.numberArr[10]).move(x,y+30))
                 x = x + this.kerningArr[10]
             } else {
-            elems.push(canvas.path(this.numberArr[parseInt(toDraw.charAt(i))]).fill({opacity: 0}).stroke({ color: '#fff', width: 4, linecap: 'round', linejoin: 'round' }).move(x,y))
+            elems.push(changeNum(curDisplay[i], this.numberArr[parseInt(toDraw.charAt(i))]).move(x,y))
             x = x + this.kerningArr[parseInt(toDraw.charAt(i))]
             }
         }
@@ -246,4 +253,13 @@ class Heebo extends Font {
         this.kerningArr = [170, 100, 160, 165, 190, 155, 150, 160, 160, 165, 50]
     }
 
+}
+
+/**
+ * curTimeString()
+ * Returns a string of the current time string.
+ */
+function curTimeString() {
+	var date = new Date()
+	return date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds()
 }
