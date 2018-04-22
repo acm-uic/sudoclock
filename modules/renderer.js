@@ -14,7 +14,7 @@ export function renderer_start(cssSelector) {
     //centerCircle(draw)
     //drawNumbers_HeeboStroke(draw)
     var fnt = new Heebo();
-    var disp = fnt.drawNumbers(draw,(window.innerWidth/4),(window.innerHeight/3),'23:59:59')
+    var disp = fnt.drawNumbers(draw,(window.innerWidth/4),(window.innerHeight/3),'20:59:59')
 	console.log(disp)
     //fnt.transitionNumbers(draw, (window.innerWidth/4), (window.innerHeight/3), disp, curTimeString())
 	setInterval(function() { updateClock(fnt, draw, disp)}, 1000)
@@ -216,15 +216,17 @@ class Font {
         var elems = []
         var x = sx
         var y = sy
+		// Loop through the string to-be drawn and update the existing display.
         for (var i = 0; i < toDraw.length; i++) {
             if (toDraw.charAt(i) === ':') {
-                elems.push(changeNum(curDisplay[i], this.numberArr[10]).move(x,y+30))
+                elems.push(changeNum(curDisplay[i], this.numberArr[10]).fill({color: '#fff', opacity: 1}).stroke({ opacity: 0}).move(x,y+30))
                 x = x + this.kerningArr[10]
             } else {
-            elems.push(changeNum(curDisplay[i], this.numberArr[parseInt(toDraw.charAt(i))]).move(x,y))
+            elems.push(changeNum(curDisplay[i], this.numberArr[parseInt(toDraw.charAt(i))]).fill({opacity: 0}).stroke({ color: '#fff', width: 4, linecap: 'round', linejoin: 'round' }).move(x,y))
             x = x + this.kerningArr[parseInt(toDraw.charAt(i))]
             }
         }
+		// If length of curDisplay does not match toDraw's length, match to toDraw.
         return elems
     }
 }
@@ -261,5 +263,15 @@ class Heebo extends Font {
  */
 function curTimeString() {
 	var date = new Date()
-	return date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds()
+	var hours = date.getHours();
+	var minutes = date.getMinutes();
+	var seconds = date.getSeconds();
+	var ampm = hours >= 12 ? 'pm' : 'am';
+	hours = hours % 12;
+	hours = hours ? hours : 12; // the hour '0' should be '12'
+	hours = hours < 10 ? '0'+hours : hours;
+	minutes = minutes < 10 ? '0'+minutes : minutes;
+	seconds = seconds < 10 ? '0'+seconds : seconds;
+	var strTime = hours + ':' + minutes + ':' + seconds;
+	return strTime;
 }
